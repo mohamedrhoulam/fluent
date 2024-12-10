@@ -8,7 +8,7 @@ app.use(express.json());
 app.use("/api/tasks", taskRoutes);
 
 beforeAll(async () => {
-    await mongoose.connect("mongodb://localhost:27017/fluent_test", {
+    await mongoose.connect("mongodb://localhost:27017/fluentdb", {
         
     });
 });
