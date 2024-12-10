@@ -20,6 +20,47 @@ import Task from "../models/Task.ts";
  *               description:
  *                 type: string
  *                 example: "Task description"
+ *               completed:
+ *                 type: boolean
+ *                 example: false
+ *               dueDate:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2023-12-31T23:59:59.000Z"
+ *               location:
+ *                 type: string
+ *                 example: "Office"
+ *               participants:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["John Doe", "Jane Doe"]
+ *               subtasks:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     title:
+ *                       type: string
+ *                       example: "Subtask title"
+ *                     description:
+ *                       type: string
+ *                       example: "Subtask description"
+ *                     completed:
+ *                       type: boolean
+ *                       example: false
+ *                     dueDate:
+ *                       type: string
+ *                       format: date-time
+ *                       example: "2023-12-31T23:59:59.000Z"
+ *                     location:
+ *                       type: string
+ *                       example: "Office"
+ *                     participants:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example: ["John Doe", "Jane Doe"]
  *     responses:
  *       201:
  *         description: Task created successfully
@@ -95,7 +136,6 @@ export const getTasks = async (req: Request, res: Response) => {
  *         name: id
  *         schema:
  *           type: string
- *         required: true
  *         description: The task ID
  *     responses:
  *       200:
@@ -137,7 +177,6 @@ export const getTask = async (req: Request, res: Response) => {
  *         name: taskId
  *         schema:
  *           type: string
- *         required: true
  *         description: The task ID
  *     responses:
  *       200:
@@ -178,7 +217,6 @@ export const getSubtasks = async (taskId: string) => {
  *         name: subtaskId
  *         schema:
  *           type: string
- *         required: true
  *         description: The subtask ID
  *     responses:
  *       200:
@@ -221,7 +259,6 @@ export const getSubtask = async (req: Request, res: Response) => {
  *         name: id
  *         schema:
  *           type: string
- *         required: true
  *         description: The task ID
  *     requestBody:
  *       required: true
@@ -285,7 +322,6 @@ export const updateTask = async (
  *         name: subtaskId
  *         schema:
  *           type: string
- *         required: true
  *         description: The subtask ID
  *     requestBody:
  *       required: true
@@ -337,7 +373,6 @@ export const updateSubtask = async (req: Request, res: Response) => {
  *         name: id
  *         schema:
  *           type: string
- *         required: true
  *         description: The task ID
  *     responses:
  *       200:
@@ -380,7 +415,6 @@ export const deleteTask = async (
  *         name: subtaskId
  *         schema:
  *           type: string
- *         required: true
  *         description: The subtask ID
  *     responses:
  *       200:
@@ -422,7 +456,6 @@ export const deleteSubtask = async (req: Request, res: Response) => {
  *         name: id
  *         schema:
  *           type: string
- *         required: true
  *         description: The task ID
  *     responses:
  *       200:
@@ -468,7 +501,6 @@ export const markTaskCompleted = async (req: Request, res: Response) => {
  *         name: subtaskId
  *         schema:
  *           type: string
- *         required: true
  *         description: The subtask ID
  *     responses:
  *       200:
