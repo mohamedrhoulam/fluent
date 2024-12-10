@@ -18,13 +18,36 @@ export const createTask = async (req: Request, res: Response) => {
 export const getTasks = async (req: Request, res: Response) => {
   try {
     const tasks = await Task.find();
-    res.status(200).json(tasks);
+    const tasksWithSubtasks = await Promise.all(
+      tasks.map(async (task) => {
+        if (task.subtasks && task.subtasks.length > 0) {
+          const subtasks = await getSubtasks(task._id.toString());
+          return { ...task.toObject(), subtasks };
+        }
+        return task;
+      })
+    );
+    res.status(200).json(tasksWithSubtasks);
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
     } else {
       res.status(400).json({ error: "An unknown error occurred" });
     }
+  }
+};
+
+export const getSubtasks = async (taskId: string) => {
+  try {
+    const task = await Task.findById(taskId);
+    if (!task) {
+      throw new Error("Task not found");
+    }
+    return task.subtasks;
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "An unknown error occurred"
+    );
   }
 };
 
