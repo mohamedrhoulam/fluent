@@ -37,6 +37,23 @@ export const getTasks = async (req: Request, res: Response) => {
   }
 };
 
+export const getTask = async (req: Request, res: Response) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      res.status(404).json({ error: "Task not found" });
+      return;
+    }
+    res.status(200).json(task);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
 export const getSubtasks = async (taskId: string) => {
   try {
     const task = await Task.findById(taskId);
@@ -48,6 +65,24 @@ export const getSubtasks = async (taskId: string) => {
     throw new Error(
       error instanceof Error ? error.message : "An unknown error occurred"
     );
+  }
+};
+
+export const getSubtask = async (req: Request, res: Response) => {
+  try {
+    const task = await Task.findOne({ "subtasks._id": req.params.subtaskId });
+    if (!task) {
+      res.status(404).json({ error: "Subtask not found" });
+      return;
+    }
+    const subtask = task.subtasks.id(req.params.subtaskId);
+    res.status(200).json(subtask);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
   }
 };
 
@@ -84,6 +119,27 @@ export const updateTask = async (
   }
 };
 
+export const updateSubtask = async (req: Request, res: Response) => {
+  try {
+    const task = await Task.findOneAndUpdate(
+      { "subtasks._id": req.params.subtaskId },
+      { $set: { "subtasks.$": req.body } },
+      { new: true, runValidators: true }
+    );
+    if (!task) {
+      res.status(404).json({ error: "Subtask not found" });
+      return;
+    }
+    res.status(200).json(task);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
 export const deleteTask = async (
   req: Request,
   res: Response
@@ -97,6 +153,69 @@ export const deleteTask = async (
     }
 
     res.status(200).json({ message: "Task deleted" });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+export const deleteSubtask = async (req: Request, res: Response) => {
+  try {
+    const task = await Task.findOneAndUpdate(
+      { "subtasks._id": req.params.subtaskId },
+      { $pull: { subtasks: { _id: req.params.subtaskId } } },
+      { new: true }
+    );
+    if (!task) {
+      res.status(404).json({ error: "Subtask not found" });
+      return;
+    }
+    res.status(200).json({ message: "Subtask deleted" });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+export const markTaskCompleted = async (req: Request, res: Response) => {
+  try {
+    const task = await Task.findByIdAndUpdate(
+      req.params.id,
+      { completed: true },
+      { new: true }
+    );
+    if (!task) {
+      res.status(404).json({ error: "Task not found" });
+      return;
+    }
+    res.status(200).json(task);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: "An unknown error occurred" });
+    }
+  }
+};
+
+export const markSubtaskCompleted = async (req: Request, res: Response) => {
+  try {
+    const task = await Task.findOneAndUpdate(
+      { "subtasks._id": req.params.subtaskId },
+      { $set: { "subtasks.$.completed": true } },
+      { new: true }
+    );
+    if (!task) {
+      res.status(404).json({ error: "Subtask not found" });
+      return;
+    }
+    res.status(200).json(task);
   } catch (error) {
     if (error instanceof Error) {
       res.status(400).json({ error: error.message });
