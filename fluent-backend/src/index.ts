@@ -3,9 +3,13 @@ import mongoose from "mongoose";
 import taskRoutes from "./routes/taskRoutes.ts";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+app.use(cors());
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -141,17 +145,19 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Server is up and running!");
-});
-
-
 app.use("/api/tasks", taskRoutes);
-mongoose.connect("mongodb://localhost:27017/fluentdb", {
-}).then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+
+mongoose
+  .connect("mongodb://localhost:27017/fluentdb", {})
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Database connection error:", error);
   });
-}).catch((error) => {
-  console.error("Database connection error:", error);
-});
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
