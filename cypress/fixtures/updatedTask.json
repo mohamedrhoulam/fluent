@@ -1,0 +1,22 @@
+{
+  "_id": "task-id",
+  "title": "Sample Task",
+  "description": "This is a sample task description",
+  "completed": false,
+  "dueDate": "2023-10-01T00:00:00.000Z",
+  "location": "Sample Location",
+  "participants": ["John Doe", "Jane Doe"],
+  "subtasks": [
+    {
+      "_id": "subtask-id",
+      "title": "Updated Subtask Title",
+      "description": "Subtask description",
+      "completed": true,
+      "dueDate": "2023-10-01T00:00:00.000Z",
+      "location": "Subtask Location",
+      "participants": ["Subtask Participant"]
+    }
+  ],
+  "createdAt": "2023-10-01T00:00:00.000Z",
+  "updatedAt": "2023-10-01T00:00:00.000Z"
+}

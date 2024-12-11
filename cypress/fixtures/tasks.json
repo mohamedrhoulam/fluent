@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "task-id-1",
+    "title": "Sample Task 1",
+    "description": "This is a sample task description 1",
+    "completed": false,
+    "dueDate": "2023-10-01T00:00:00.000Z",
+    "location": "Sample Location 1",
+    "participants": ["John Doe", "Jane Doe"],
+    "subtasks": [
+      {
+        "_id": "subtask-id-1",
+        "title": "Sample Subtask 1",
+        "description": "Subtask description 1",
+        "completed": false,
+        "dueDate": "2023-10-01T00:00:00.000Z",
+        "location": "Subtask Location 1",
+        "participants": ["Subtask Participant 1"]
+      }
+    ]
+  },
+  {
+    "_id": "task-id-2",
+    "title": "Sample Task 2",
+    "description": "This is a sample task description 2",
+    "completed": false,
+    "dueDate": "2023-10-02T00:00:00.000Z",
+    "location": "Sample Location 2",
+    "participants": ["John Smith", "Jane Smith"],
+    "subtasks": [
+      {
+        "_id": "subtask-id-2",
+        "title": "Sample Subtask 2",
+        "description": "Subtask description 2",
+        "completed": false,
+        "dueDate": "2023-10-02T00:00:00.000Z",
+        "location": "Subtask Location 2",
+        "participants": ["Subtask Participant 2"]
+      }
+    ]
+  }
+]
