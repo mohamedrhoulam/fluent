@@ -15,12 +15,19 @@ import {
   PopoverTrigger,
 } from "../../components/ui/popover";
 import { Task } from "../../types/Task";
+import { createTask } from "../../services/taskService";
 
 interface TaskSidebarProps {
   onClose: () => void;
+  onTaskCreated: (task: Task) => void;
 }
 
-const TaskSidebar: React.FC<TaskSidebarProps> = ({ onClose }) => {
+
+
+const TaskSidebar: React.FC<TaskSidebarProps> = ({
+  onClose,
+  onTaskCreated,
+}) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [completed, setCompleted] = useState(false);
@@ -28,7 +35,8 @@ const TaskSidebar: React.FC<TaskSidebarProps> = ({ onClose }) => {
   const [location, setLocation] = useState("");
   const [participants, setParticipants] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     const newTask: Omit<Task, "_id" | "createdAt" | "updatedAt"> = {
       title,
       description,
@@ -39,15 +47,20 @@ const TaskSidebar: React.FC<TaskSidebarProps> = ({ onClose }) => {
       subtasks: [],
     };
 
-    console.log(newTask);
-    onClose();
+    try {
+      const createdTask = await createTask(newTask);
+      onTaskCreated(createdTask);
+      onClose();
+    } catch (error) {
+      console.error("Failed to create task:", error);
+    }
   };
 
-  function cn(...classes: (string | boolean | undefined)[]): string {
-    return classes.filter(Boolean).join(" ");
-  }
+    function cn(...classes: (string | boolean | undefined)[]): string {
+        return classes.filter(Boolean).join(" ");
+    }
   return (
-    <div className="fixed top-0 right-0 h-full w-1/3 shadow-lg transition-transform duration-300 transform translate-x-0 border ">
+    <div className="fixed top-0 right-0 h-full w-1/3 shadow-lg transition-transform duration-300 transform translate-x-0 border">
       <div className="p-4">
         <Button onClick={onClose} variant="default" size="sm">
           Close
@@ -78,7 +91,7 @@ const TaskSidebar: React.FC<TaskSidebarProps> = ({ onClose }) => {
             </label>
             <Switch
               checked={completed}
-              onCheckedChange={(checked: boolean) => setCompleted(checked)}
+              onCheckedChange={(checked) => setCompleted(checked)}
             />
           </div>
           <div>
@@ -90,7 +103,7 @@ const TaskSidebar: React.FC<TaskSidebarProps> = ({ onClose }) => {
                 <Button
                   variant={"outline"}
                   className={cn(
-                    "w-40 justify-start text-left font-normal text-white",
+                    "w-60 justify-start text-left font-normal text-white",
                     !dueDate && "text-muted-foreground"
                   )}
                 >
