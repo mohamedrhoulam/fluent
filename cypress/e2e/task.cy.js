@@ -19,7 +19,7 @@ describe('Task Service', () => {
       participants: ['John Doe', 'Jane Doe'],
       subtasks: [
         {
-          _id: 'subtask-id',
+          _id: '60d21b4667d0d8992e610c85', // Valid ObjectId
           title: 'Sample Subtask',
           description: 'Subtask description',
           completed: false,
@@ -39,8 +39,8 @@ describe('Task Service', () => {
   });
 
   it('updates a subtask successfully', () => {
-    const mockTaskId = 'task-id';
-    const mockSubtaskId = 'subtask-id';
+    const mockTaskId = '60d21b4667d0d8992e610c85'; // Valid ObjectId
+    const mockSubtaskId = '60d21b4667d0d8992e610c86'; // Valid ObjectId
     const mockUpdates = {
       title: 'Updated Subtask Title',
       completed: true,
@@ -82,7 +82,7 @@ describe('Task Service', () => {
       participants: ['John Doe', 'Jane Doe'],
       subtasks: [
         {
-          _id: 'subtask-id',
+          _id: '60d21b4667d0d8992e610c87', // Valid ObjectId
           title: 'Sample Subtask',
           description: 'Subtask description',
           completed: false,
@@ -115,7 +115,7 @@ describe('Task Service', () => {
       ...mockTask,
       subtasks: [
         {
-          _id: 'subtask-id',
+          _id: '60d21b4667d0d8992e610c88', // Valid ObjectId
           title: 'New Subtask',
           description: 'Subtask description',
           completed: false,
@@ -155,7 +155,7 @@ describe('Task Service', () => {
       ...mockTask,
       subtasks: [
         {
-          _id: 'subtask-id',
+          _id: '60d21b4667d0d8992e610c89', // Valid ObjectId
           title: 'New Subtask',
           description: 'Subtask description',
           completed: false,
