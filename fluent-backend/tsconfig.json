@@ -13,8 +13,13 @@
     "isolatedModules": true,
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "noEmit": true
   },
   "include": ["./src/**/*", "./tests/**/*", "index.ts", "./src/**/*"],
-  "exclude": [ "dist"]
+  "exclude": ["dist"],
+  "ts-node": {
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true,
+    "esm": true
+  }
 }

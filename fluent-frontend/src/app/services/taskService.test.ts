@@ -3,6 +3,7 @@ import {
   createTask,
   updateTask,
   updateSubtask,
+  fetchTask,
 } from "./taskService";
 import axios from "axios";
 jest.mock("axios");
@@ -231,6 +232,78 @@ describe("Task Service", () => {
     expect(axios.put).toHaveBeenCalledWith(
       `http://localhost:5000/api/tasks/${createdTask._id}`,
       { subtasks: updatedTask.subtasks }
+    );
+  });
+
+  it("creates a task with a random name, then modifies it by adding a new subtask but keeps the task in the database", async () => {
+    const randomName = `Task-${Math.random().toString(36).substring(7)}`;
+    const mockTask: Omit<Task, "_id" | "createdAt" | "updatedAt"> = {
+      title: randomName,
+      description: "",
+      completed: false,
+      dueDate: undefined,
+      location: "",
+      participants: [],
+      subtasks: [],
+    };
+
+    const createdTask: Task = {
+      ...mockTask,
+      description: "",
+      completed: false,
+      dueDate: undefined,
+      location: "",
+      participants: [],
+      subtasks: [],
+      _id: "task-id",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const updatedTask: Task = {
+      ...createdTask,
+      subtasks: [
+        {
+          _id: "subtask-id",
+          title: "New Subtask",
+          description: "Subtask description",
+          completed: false,
+          dueDate: new Date(),
+          location: "Subtask Location",
+          participants: ["Subtask Participant"],
+        },
+      ],
+    };
+
+    (axios.post as jest.Mock).mockResolvedValue({ data: createdTask });
+    const newTask = await createTask(mockTask);
+    expect(newTask).toEqual(createdTask);
+    expect(axios.post).toHaveBeenCalledWith("http://localhost:5000/api/tasks", {
+      title: randomName,
+      description: "",
+      completed: false,
+      dueDate: null,
+      location: "",
+      participants: [],
+      subtasks: [],
+    });
+
+    (axios.put as jest.Mock).mockResolvedValue({ data: updatedTask });
+    const updated = await updateTask(createdTask._id, {
+      subtasks: updatedTask.subtasks,
+    });
+    expect(updated).toEqual(updatedTask);
+    expect(axios.put).toHaveBeenCalledWith(
+      `http://localhost:5000/api/tasks/${createdTask._id}`,
+      { subtasks: updatedTask.subtasks }
+    );
+
+    // Ensure the task is still in the database
+    (axios.get as jest.Mock).mockResolvedValue({ data: updatedTask });
+    const fetchedTask = await fetchTask(createdTask._id);
+    expect(fetchedTask).toEqual(updatedTask);
+    expect(axios.get).toHaveBeenCalledWith(
+      `http://localhost:5000/api/tasks/${createdTask._id}`
     );
   });
 });

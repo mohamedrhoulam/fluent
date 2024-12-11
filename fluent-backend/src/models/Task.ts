@@ -20,7 +20,7 @@ const taskSchema = new Schema(
     dueDate: { type: Date },
     location: { type: String },
     participants: [{ type: String }],
-    subtasks: [subtaskSchema],
+    subtasks: { type: [subtaskSchema], default: [] },
   },
   { timestamps: true }
 );
