@@ -2,16 +2,25 @@
 
 import React, { useEffect, useState } from "react";
 import { format, isToday, isTomorrow, isThisWeek } from "date-fns";
+import { Pencil } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { fetchTasks, updateTask } from "../../services/taskService";
 import { Task } from "../../types/Task";
 import TaskSidebar from "./TaskSidebar";
+import TaskEditSidebar from "./TaskEditSidebar";
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
+  const [isEditSidebarOpen, setIsEditSidebarOpen] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+
+  const handleEditTask = (task: Task) => {
+    setTaskToEdit(task);
+    setIsEditSidebarOpen(true);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,7 +57,9 @@ const TaskList: React.FC = () => {
     <div className="flex">
       <div
         className={`w-1/2 mx-auto pt-4 transition-transform duration-300 ${
-          isSidebarOpen ? "transform translate-x-[-250px]" : ""
+          isSidebarOpen || isEditSidebarOpen
+            ? "transform translate-x-[-250px]"
+            : ""
         }`}
       >
         <div className="max-h-[500px] overflow-y-auto rounded-lg border shadow-inner">
@@ -76,7 +87,10 @@ const TaskList: React.FC = () => {
             <tbody className="divide-y divide-gray-40">
               {tasks.map((task) => (
                 <React.Fragment key={task._id}>
-                  <tr onClick={() => handleToggleExpand(task._id)}>
+                  <tr
+                    onClick={() => handleToggleExpand(task._id)}
+                    className="relative group"
+                  >
                     <td
                       className="px-8 py-9 whitespace-nowrap overflow-hidden overflow-ellipsis text-sm font-medium flex justify-between items-center cursor-pointer"
                       style={{ maxWidth: "100%" }}
@@ -133,12 +147,19 @@ const TaskList: React.FC = () => {
                           !isTomorrow(new Date(task.dueDate)) && (
                             <Badge
                               variant="secondary"
-                              className="border border-gray-400 text-gray-800 cursor-pointer"
+                              className="border border-gray-400 cursor-pointer"
                             >
                               Due This Week
                             </Badge>
                           )}
                       </div>
+                      <Pencil
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-50 group-hover:opacity-100 cursor-pointer h-3 w-3"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditTask(task);
+                        }}
+                      />
                     </td>
                   </tr>
                   {expandedTaskId === task._id && (
@@ -201,6 +222,20 @@ const TaskList: React.FC = () => {
         <TaskSidebar
           onClose={() => setIsSidebarOpen(false)}
           onTaskCreated={handleTaskCreated}
+        />
+      )}
+      {isEditSidebarOpen && (
+        <TaskEditSidebar
+          task={taskToEdit}
+          onClose={() => setIsEditSidebarOpen(false)}
+          onTaskUpdated={(updatedTask) => {
+            setTasks((prevTasks) =>
+              prevTasks.map((t) =>
+                t._id === updatedTask._id ? updatedTask : t
+              )
+            );
+            setIsEditSidebarOpen(false);
+          }}
         />
       )}
     </div>
