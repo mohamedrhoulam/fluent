@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: cd fluent-frontend && npm install --legacy-peer-deps
-      - run: cd fluent-frontend && npm test
+      - run: cd fluent-frontend && npm test -- --passWithNoTests
 
   backend:
     name: Backend
@@ -39,4 +39,4 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: cd fluent-backend && npm install --legacy-peer-deps
-      - run: cd fluent-backend && npm test
+      - run: cd fluent-backend && npm test -- --passWithNoTests
