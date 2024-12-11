@@ -1,7 +1,13 @@
 "use client";
 
 import React from "react";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import TaskList from "./pages/tasks/page";
 import Dashboard from "./pages/dashboard/dash";
 
@@ -26,6 +32,7 @@ export default function Home() {
         </header>
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
           <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/tasks" element={<TaskList />} />
           </Routes>
