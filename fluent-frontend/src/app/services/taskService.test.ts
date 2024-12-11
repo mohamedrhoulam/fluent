@@ -298,7 +298,6 @@ describe("Task Service", () => {
       { subtasks: updatedTask.subtasks }
     );
 
-    // Ensure the task is still in the database
     (axios.get as jest.Mock).mockResolvedValue({ data: updatedTask });
     const fetchedTask = await fetchTask(createdTask._id);
     expect(fetchedTask).toEqual(updatedTask);
